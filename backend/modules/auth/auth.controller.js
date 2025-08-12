@@ -2,13 +2,13 @@ import * as authService from "./auth.service.js";
 
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, phone } = req.body;
 
     if (!["Student", "Tutor"].includes(role)) {
       return res.status(400).json({ message: "Invalid Role" });
     }
 
-    const user = await authService.register(name, email, password, role);
+    const user = await authService.register(name, email, password, role, phone);
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json({ message: err.message });

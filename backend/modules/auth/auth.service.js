@@ -2,9 +2,13 @@ import bcrypt from "bcryptjs";
 import User from "../user/user.schema.js";
 import generateToken from "../../utils/generateToken.js";
 
-export const register = async (name, email, password, role) => {
+export const register = async (name, email, password, role, phone) => {
   const userExists = await User.findOne({ email });
   if (userExists) throw new Error("User already exists");
+
+  if (!/^((\+8801|01)[0-9]{9})$/.test(phone)) {
+    throw new Error("Invalid Bangladeshi phone number");
+  }
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await User.create({
@@ -12,6 +16,7 @@ export const register = async (name, email, password, role) => {
     email,
     password: hashedPassword,
     role,
+    phone,
   });
 
   return {
@@ -19,6 +24,7 @@ export const register = async (name, email, password, role) => {
     name: user.name,
     email: user.email,
     role: user.role,
+    phone: user.phone,
     token: generateToken(user),
   };
 };
@@ -35,6 +41,7 @@ export const login = async (email, password) => {
     name: user.name,
     email: user.email,
     role: user.role,
+    phone: user.phone,
     token: generateToken(user),
   };
 };
