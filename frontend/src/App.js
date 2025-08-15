@@ -1,39 +1,47 @@
 import React, { useContext } from "react";
 import { AuthProvider, AuthContext } from "../src/contexts/AuthContext";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Login from "../src/components/Auth/Login";
 import Register from "../src/components/Auth/Register";
+import Home from "../src/pages/Home";
+// import About from "../src/pages/About";
+// import Explore from "../src/pages/Explore";
+import Navbar from "../src/components/Layout/Navbar";
 import "./App.css";
 
 function AppContent() {
   const { user } = useContext(AuthContext);
-  const [showLogin, setShowLogin] = React.useState(true);
-
-  if (user) {
-    return (
-      <div className="App">
-        <h2>Welcome, {user.name}!</h2>
-        <p>You are logged in as {user.role}.</p>
-      </div>
-    );
-  }
 
   return (
-    <div>
-      <div style={{ textAlign: "center", margin: "2rem" }}>
-        <button onClick={() => setShowLogin(true)} style={{ marginRight: 10 }}>
-          Login
-        </button>
-        <button onClick={() => setShowLogin(false)}>Register</button>
-      </div>
-      {showLogin ? <Login /> : <Register />}
-    </div>
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        {/* <Route path="/about" element={<About />} /> */}
+        {/* <Route path="/explore" element={<Explore />} /> */}
+        {!user && (
+          <>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </>
+        )}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </>
   );
 }
 
 function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <Router>
+        <AppContent />
+      </Router>
     </AuthProvider>
   );
 }

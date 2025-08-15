@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import styles from "./Register.module.css";
 import { AuthContext } from "../../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const { register } = useContext(AuthContext);
@@ -85,6 +86,22 @@ const Register = () => {
         <button className={styles.button} type="submit">
           Register
         </button>
+        <div style={{ marginTop: "1rem", textAlign: "center" }}>
+          <span>Already Registered? </span>
+          <Link
+            to="/login"
+            style={{
+              color: "#007bff",
+              cursor: "pointer",
+              textDecoration: "underline",
+              padding: 0,
+              background: "none",
+              border: "none",
+            }}
+          >
+            Login
+          </Link>
+        </div>
       </form>
     </div>
   );
