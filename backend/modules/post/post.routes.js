@@ -18,7 +18,8 @@ router.post(
   createPost
 );
 
-// GET /posts → Fetch all posts (with filtering)
+// GET /posts → Fetch all posts (with filtering support)
+// Query params: ?subject=math&location=dhaka&minSalary=5000&maxSalary=20000&page=1&limit=10
 router.get(
   "/",
   getAllPosts
