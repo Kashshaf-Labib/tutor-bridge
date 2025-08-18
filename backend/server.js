@@ -13,6 +13,10 @@ app.use(express.json());
 import authRoutes from "./modules/auth/auth.routes.js";
 app.use("/api/auth", authRoutes);
 
+//post routes
+import postRoutes from "./modules/post/post.routes.js";
+app.use("/api/posts", postRoutes);
+
 // Sample route
 app.get("/", (req, res) => {
   res.send("API is running...");
