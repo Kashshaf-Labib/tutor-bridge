@@ -263,3 +263,59 @@ export const deletePost = async (req, res) => {
     });
   }
 };
+
+// @desc    Tutor expresses interest in a post
+// @route   POST /api/posts/:id/interested
+// @access  Private (Tutor only)
+export const expressInterest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tutorId = req.user._id;
+
+    // Check if user is a tutor
+    if (req.user.role !== "tutor") {
+      return res.status(403).json({ success: false, message: "Only tutors can express interest." });
+    }
+
+    // Find post
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found." });
+    }
+
+    // Add tutor to interestedTutors if not already added
+    if (!post.interestedTutors.includes(tutorId)) {
+      post.interestedTutors.push(tutorId);
+      await post.save();
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Interest expressed successfully.",
+      data: post
+    });
+  } catch (error) {
+    console.error("Error expressing interest:", error);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+};
+
+// @desc    Get interested tutors for a post
+// @route   GET /api/posts/:id/interested
+// @access  Private (Student or Tutor)
+export const getInterestedTutors = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.findById(id).populate("interestedTutors", "name email role");
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found." });
+    }
+    res.status(200).json({
+      success: true,
+      data: post.interestedTutors
+    });
+  } catch (error) {
+    console.error("Error fetching interested tutors:", error);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+};
