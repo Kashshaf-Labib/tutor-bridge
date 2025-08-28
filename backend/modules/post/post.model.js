@@ -32,7 +32,17 @@ const PostSchema = new mongoose.Schema(
       ref: "User", 
       required: [true, "Student reference is required"]
     },
-    interestedTutors: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
+    interestedTutors: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    selectedTutor: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "User",
+      default: null
+    },
+    status: {
+      type: String,
+      enum: ["open", "assigned", "completed"],
+      default: "open"
+    }
   },
   { 
     timestamps: true,
