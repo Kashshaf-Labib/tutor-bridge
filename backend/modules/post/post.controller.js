@@ -1,4 +1,4 @@
-import Post from "./post.schema.js";
+import Post from "./post.model.js";
 import mongoose from "mongoose";
 
 // @desc    Create a new post
@@ -62,7 +62,7 @@ export const createPost = async (req, res) => {
 // @access  Public
 export const getAllPosts = async (req, res) => {
   try {
-    const { subject, location, minSalary, maxSalary, page = 1, limit = 10 } = req.query;
+    const { subject, location, minSalary, maxSalary } = req.query;
 
     // Build filter object
     const filter = {};
@@ -81,32 +81,15 @@ export const getAllPosts = async (req, res) => {
       if (maxSalary) filter.salary.$lte = Number(maxSalary);
     }
 
-    // Pagination
-    const pageNumber = Math.max(1, parseInt(page));
-    const limitNumber = Math.min(50, Math.max(1, parseInt(limit))); // Max 50 posts per page
-    const skip = (pageNumber - 1) * limitNumber;
-
-    // Execute query with pagination
+    // Execute query without pagination
     const posts = await Post.find(filter)
       .populate('student', 'name email role')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limitNumber);
-
-    const totalPosts = await Post.countDocuments(filter);
-    const totalPages = Math.ceil(totalPosts / limitNumber);
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
       message: "Posts fetched successfully",
-      data: posts,
-      pagination: {
-        currentPage: pageNumber,
-        totalPages,
-        totalPosts,
-        hasNextPage: pageNumber < totalPages,
-        hasPreviousPage: pageNumber > 1
-      }
+      data: posts
     });
 
   } catch (error) {
