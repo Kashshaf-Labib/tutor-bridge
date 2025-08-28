@@ -116,7 +116,10 @@ export const getPostById = async (req, res) => {
       });
     }
 
-    const post = await Post.findById(id).populate('student', 'name email role phone');
+    const post = await Post.findById(id)
+      .populate('student', 'name email role phone')
+      .populate('interestedTutors', 'name email role phone')
+      .populate('selectedTutor', 'name email role phone');
 
     if (!post) {
       return res.status(404).json({
@@ -320,6 +323,85 @@ export const getInterestedTutors = async (req, res) => {
   }
 };
 
+// @desc    Select a tutor for a post
+// @route   PUT /api/posts/:id/select-tutor
+// @access  Private (Student only, own posts)
+export const selectTutor = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { tutorId } = req.body;
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid post ID"
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(tutorId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid tutor ID"
+      });
+    }
+
+    // Find post and check ownership
+    const post = await Post.findById(id);
+    
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found"
+      });
+    }
+
+    // Check if user owns the post
+    if (post.student.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. You can only select tutors for your own posts"
+      });
+    }
+
+    // Check if the tutor is in the interested tutors list
+    if (!post.interestedTutors.includes(tutorId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Selected tutor must be from the interested tutors list"
+      });
+    }
+
+    // Update post with selected tutor
+    const updatedPost = await Post.findByIdAndUpdate(
+      id,
+      { 
+        selectedTutor: tutorId,
+        status: "assigned"
+      },
+      { new: true, runValidators: true }
+    )
+    .populate('student', 'name email role')
+    .populate('selectedTutor', 'name email role phone')
+    .populate('interestedTutors', 'name email role phone');
+
+    res.status(200).json({
+      success: true,
+      message: "Tutor selected successfully",
+      data: updatedPost
+    });
+
+  } catch (error) {
+    console.error("Error selecting tutor:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while selecting tutor"
+    });
+  }
+  
+// @desc    Get my posts
+// @route   GET /api/posts/my
+// @access  Private (Student only)
 export const getMyPosts = async (req, res) => {
   try {
     // Check if user is a student
@@ -334,6 +416,7 @@ export const getMyPosts = async (req, res) => {
     const posts = await Post.find({ student: req.user._id })
       .populate('student', 'name email role')
       .populate('interestedTutors', 'name email role phone')
+      .populate('selectedTutor', 'name email role phone')
       .sort({ createdAt: -1 });
 
     res.status(200).json({
