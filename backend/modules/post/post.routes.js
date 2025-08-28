@@ -7,7 +7,8 @@ import {
   updatePost,
   deletePost,
   expressInterest,
-  getInterestedTutors
+  getInterestedTutors,
+  getMyPosts
 } from "./post.controller.js";
 
 const router = express.Router();
