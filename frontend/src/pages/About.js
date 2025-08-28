@@ -24,7 +24,28 @@ const aboutData = [
 ];
 
 function About() {
-  return <div className={styles.aboutPage}></div>;
+  return (
+    <div className={styles.aboutPage}>
+      <h1 className={styles.aboutTitle}>About TutorBridge</h1>
+      <p className={styles.aboutSubtitle}>
+        Bridging the gap between students and tutors with technology,
+        innovation, and care.
+      </p>
+      <div className={styles.aboutCards}>
+        {aboutData.map((item, idx) => (
+          <div key={idx} className={styles.aboutCard}>
+            <div className={styles.aboutIcon}>{item.icon}</div>
+            <h2 className={styles.aboutCardTitle}>{item.title}</h2>
+            <p className={styles.aboutCardDesc}>{item.description}</p>
+          </div>
+        ))}
+      </div>
+      <div className={styles.aboutFooter}>
+        <span>TutorBridge</span> &copy; {new Date().getFullYear()} &mdash; All
+        rights reserved.
+      </div>
+    </div>
+  );
 }
 
 export default About;
