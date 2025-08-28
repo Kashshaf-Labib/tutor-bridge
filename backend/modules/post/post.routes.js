@@ -9,6 +9,7 @@ import {
   expressInterest,
   getInterestedTutors,
   getMyPosts,
+  getMyInterestedPosts,
   selectTutor
 } from "./post.controller.js";
 
@@ -19,6 +20,9 @@ router.post("/", protect, authorizeRoles("Student"), createPost);
 
 // GET /posts/my-posts → Get current student's posts (Student only)
 router.get("/my-posts", protect, authorizeRoles("Student"), getMyPosts);
+
+// GET /posts/my-interests → Get posts where tutor expressed interest (Tutor only)
+router.get("/my-interests", protect, authorizeRoles("Tutor"), getMyInterestedPosts);
 
 // GET /posts → Fetch all posts (with filtering support)
 // Query params: ?subject=math&location=dhaka&minSalary=5000&maxSalary=20000&page=1&limit=10
