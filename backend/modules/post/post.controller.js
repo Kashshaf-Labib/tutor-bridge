@@ -435,3 +435,38 @@ export const getMyPosts = async (req, res) => {
     });
   }
 };
+
+// @desc    Get posts where tutor has expressed interest
+// @route   GET /api/posts/my-interests
+// @access  Private (Tutor only)
+export const getMyInterestedPosts = async (req, res) => {
+  try {
+    // Check if user is a tutor
+    if (req.user.role !== "Tutor") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only tutors can view their interested posts"
+      });
+    }
+
+    // Find all posts where the current tutor is in interestedTutors array
+    const posts = await Post.find({ interestedTutors: req.user._id })
+      .populate('student', 'name email role phone')
+      .populate('selectedTutor', 'name email role phone')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      message: "Your interested posts fetched successfully",
+      count: posts.length,
+      data: posts
+    });
+
+  } catch (error) {
+    console.error("Error fetching tutor interested posts:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching your interested posts"
+    });
+  }
+};
