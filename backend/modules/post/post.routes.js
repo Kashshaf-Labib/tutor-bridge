@@ -15,6 +15,9 @@ const router = express.Router();
 // POST /posts → Create a post (Student only)
 router.post("/", protect, authorizeRoles("Student"), createPost);
 
+// GET /posts/my-posts → Get current student's posts (Student only)
+router.get("/my-posts", protect, authorizeRoles("Student"), getMyPosts);
+
 // GET /posts → Fetch all posts (with filtering support)
 // Query params: ?subject=math&location=dhaka&minSalary=5000&maxSalary=20000&page=1&limit=10
 router.get("/", getAllPosts);
