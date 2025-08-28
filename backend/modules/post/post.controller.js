@@ -276,7 +276,7 @@ export const expressInterest = async (req, res) => {
     const tutorId = req.user._id;
 
     // Check if user is a tutor
-    if (req.user.role !== "tutor") {
+    if (req.user.role !== "Tutor") {
       return res.status(403).json({ success: false, message: "Only tutors can express interest." });
     }
 
@@ -398,6 +398,7 @@ export const selectTutor = async (req, res) => {
       message: "Server error while selecting tutor"
     });
   }
+};
   
 // @desc    Get my posts
 // @route   GET /api/posts/my
