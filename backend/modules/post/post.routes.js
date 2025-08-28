@@ -5,46 +5,31 @@ import {
   getAllPosts,
   getPostById,
   updatePost,
-  deletePost
+  deletePost,
+  expressInterest,
+  getInterestedTutors
 } from "./post.controller.js";
 
 const router = express.Router();
 
 // POST /posts → Create a post (Student only)
-router.post(
-  "/",
-  protect,
-  authorizeRoles("Student"),
-  createPost
-);
+router.post("/", protect, authorizeRoles("Student"), createPost);
 
 // GET /posts → Fetch all posts (with filtering support)
 // Query params: ?subject=math&location=dhaka&minSalary=5000&maxSalary=20000&page=1&limit=10
-router.get(
-  "/",
-  getAllPosts
-);
+router.get("/", getAllPosts);
 
 // GET /posts/:id → Fetch a single post
-router.get(
-  "/:id",
-  getPostById
-);
+router.get("/:id", getPostById);
 
 // PUT /posts/:id → Update post (Student only, own posts)
-router.put(
-  "/:id",
-  protect,
-  authorizeRoles("Student"),
-  updatePost
-);
+router.put("/:id", protect, authorizeRoles("Student"), updatePost);
 
 // DELETE /posts/:id → Delete post (Student only, own posts)
-router.delete(
-  "/:id",
-  protect,
-  authorizeRoles("Student"),
-  deletePost
-);
+router.delete("/:id", protect, authorizeRoles("Student"), deletePost);
+
+router.post("/:id/interested", protect, expressInterest);
+
+router.get("/:id/interested", protect, getInterestedTutors);
 
 export default router;

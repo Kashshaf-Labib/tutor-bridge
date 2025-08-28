@@ -1,4 +1,4 @@
-import Post from "./post.schema.js";
+import Post from "./post.model.js";
 import mongoose from "mongoose";
 
 // @desc    Create a new post
@@ -62,7 +62,7 @@ export const createPost = async (req, res) => {
 // @access  Public
 export const getAllPosts = async (req, res) => {
   try {
-    const { subject, location, minSalary, maxSalary, page = 1, limit = 10 } = req.query;
+    const { subject, location, minSalary, maxSalary } = req.query;
 
     // Build filter object
     const filter = {};
@@ -81,32 +81,15 @@ export const getAllPosts = async (req, res) => {
       if (maxSalary) filter.salary.$lte = Number(maxSalary);
     }
 
-    // Pagination
-    const pageNumber = Math.max(1, parseInt(page));
-    const limitNumber = Math.min(50, Math.max(1, parseInt(limit))); // Max 50 posts per page
-    const skip = (pageNumber - 1) * limitNumber;
-
-    // Execute query with pagination
+    // Execute query without pagination
     const posts = await Post.find(filter)
       .populate('student', 'name email role')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limitNumber);
-
-    const totalPosts = await Post.countDocuments(filter);
-    const totalPages = Math.ceil(totalPosts / limitNumber);
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
       message: "Posts fetched successfully",
-      data: posts,
-      pagination: {
-        currentPage: pageNumber,
-        totalPages,
-        totalPosts,
-        hasNextPage: pageNumber < totalPages,
-        hasPreviousPage: pageNumber > 1
-      }
+      data: posts
     });
 
   } catch (error) {
@@ -278,5 +261,61 @@ export const deletePost = async (req, res) => {
       success: false,
       message: "Server error while deleting post"
     });
+  }
+};
+
+// @desc    Tutor expresses interest in a post
+// @route   POST /api/posts/:id/interested
+// @access  Private (Tutor only)
+export const expressInterest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const tutorId = req.user._id;
+
+    // Check if user is a tutor
+    if (req.user.role !== "tutor") {
+      return res.status(403).json({ success: false, message: "Only tutors can express interest." });
+    }
+
+    // Find post
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found." });
+    }
+
+    // Add tutor to interestedTutors if not already added
+    if (!post.interestedTutors.includes(tutorId)) {
+      post.interestedTutors.push(tutorId);
+      await post.save();
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Interest expressed successfully.",
+      data: post
+    });
+  } catch (error) {
+    console.error("Error expressing interest:", error);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+};
+
+// @desc    Get interested tutors for a post
+// @route   GET /api/posts/:id/interested
+// @access  Private (Student or Tutor)
+export const getInterestedTutors = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.findById(id).populate("interestedTutors", "name email role");
+    if (!post) {
+      return res.status(404).json({ success: false, message: "Post not found." });
+    }
+    res.status(200).json({
+      success: true,
+      data: post.interestedTutors
+    });
+  } catch (error) {
+    console.error("Error fetching interested tutors:", error);
+    res.status(500).json({ success: false, message: "Server error." });
   }
 };
