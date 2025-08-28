@@ -319,3 +319,35 @@ export const getInterestedTutors = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error." });
   }
 };
+
+export const getMyPosts = async (req, res) => {
+  try {
+    // Check if user is a student
+    if (req.user.role !== "Student") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Only students can view their posts"
+      });
+    }
+
+    // Find all posts created by the current student
+    const posts = await Post.find({ student: req.user._id })
+      .populate('student', 'name email role')
+      .populate('interestedTutors', 'name email role phone')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      message: "Your posts fetched successfully",
+      count: posts.length,
+      data: posts
+    });
+
+  } catch (error) {
+    console.error("Error fetching student posts:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching your posts"
+    });
+  }
+};
