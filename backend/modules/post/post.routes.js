@@ -8,7 +8,8 @@ import {
   deletePost,
   expressInterest,
   getInterestedTutors,
-  getMyPosts
+  getMyPosts,
+  selectTutor
 } from "./post.controller.js";
 
 const router = express.Router();
@@ -31,6 +32,9 @@ router.put("/:id", protect, authorizeRoles("Student"), updatePost);
 
 // DELETE /posts/:id → Delete post (Student only, own posts)
 router.delete("/:id", protect, authorizeRoles("Student"), deletePost);
+
+// PUT /posts/:id/select-tutor → Select tutor for post (Student only, own posts)
+router.put("/:id/select-tutor", protect, authorizeRoles("Student"), selectTutor);
 
 router.post("/:id/interested", protect, expressInterest);
 
