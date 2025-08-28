@@ -191,6 +191,32 @@
   background: #e67e22;
 }
 
+.tutorStatus {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  text-align: center;
+ 
+}
+
+.selectedStatus {
+  background: #e8f5e8;
+  color: #2e7d32;
+  border: 1px solid #4caf50;
+}
+
+.rejectedStatus {
+  background: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #f44336;
+}
+
+.pendingStatus {
+  background: #fff3e0;
+  color: #f57c00;
+  border: 1px solid #ff9800;
+}
+
 @media (max-width: 768px) {
   .profileContainer {
     padding: 1rem;
