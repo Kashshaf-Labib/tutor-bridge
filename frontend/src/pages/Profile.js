@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import styles from "./Profile.module.css";
@@ -9,11 +9,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    fetchMyPosts();
-  }, []);
-
-  const fetchMyPosts = async () => {
+  const fetchMyPosts = useCallback(async () => {
     try {
       const response = await fetch("/api/posts/my-posts", {
         headers: {
@@ -34,7 +30,11 @@ const Profile = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user.token]);
+
+  useEffect(() => {
+    fetchMyPosts();
+  }, [fetchMyPosts]);
 
   const getStatusBadge = (status) => {
     const statusClasses = {

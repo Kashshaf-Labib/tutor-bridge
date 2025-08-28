@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import styles from "./PostDetails.module.css";
@@ -12,11 +12,7 @@ const PostDetails = () => {
   const [error, setError] = useState("");
   const [selectingTutor, setSelectingTutor] = useState(false);
 
-  useEffect(() => {
-    fetchPostDetails();
-  }, [id]);
-
-  const fetchPostDetails = async () => {
+  const fetchPostDetails = useCallback(async () => {
     try {
       const response = await fetch(`/api/posts/${id}`, {
         headers: {
@@ -37,7 +33,11 @@ const PostDetails = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, user.token]);
+
+  useEffect(() => {
+    fetchPostDetails();
+  }, [fetchPostDetails]);
 
   const selectTutor = async (tutorId) => {
     setSelectingTutor(true);
