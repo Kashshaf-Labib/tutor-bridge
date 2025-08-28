@@ -17,7 +17,24 @@ import Navbar from "../src/components/Layout/Navbar";
 import "./App.css";
 
 function AppContent() {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
+
+  // Show loading while checking authentication state
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          fontSize: "1.2rem",
+        }}
+      >
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <>
