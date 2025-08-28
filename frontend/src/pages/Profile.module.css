@@ -1,0 +1,211 @@
+.profileContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.profileHeader {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.profileHeader h1 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.userInfo h2 {
+  color: #3498db;
+  margin-bottom: 0.5rem;
+}
+
+.userInfo p {
+  color: #666;
+  margin: 0.25rem 0;
+}
+
+.postsSection {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sectionHeader h2 {
+  color: #2c3e50;
+  margin: 0;
+}
+
+.createBtn {
+  background: #3498db;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.createBtn:hover {
+  background: #2980b9;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.error {
+  background: #fee;
+  color: #c33;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.noPosts {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.noPosts p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.postsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.postCard {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  background: #fafbfc;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.postCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.postHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.postHeader h3 {
+  color: #2c3e50;
+  margin: 0;
+  flex: 1;
+}
+
+.statusBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusOpen {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.statusAssigned {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.statusCompleted {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.postInfo {
+  margin-bottom: 1.5rem;
+}
+
+.postInfo p {
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+.postActions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.detailsBtn, .editBtn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.detailsBtn {
+  background: #3498db;
+  color: white;
+}
+
+.detailsBtn:hover {
+  background: #2980b9;
+}
+
+.editBtn {
+  background: #f39c12;
+  color: white;
+}
+
+.editBtn:hover {
+  background: #e67e22;
+}
+
+@media (max-width: 768px) {
+  .profileContainer {
+    padding: 1rem;
+  }
+  
+  .sectionHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .postsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .postActions {
+    justify-content: center;
+  }
+}
