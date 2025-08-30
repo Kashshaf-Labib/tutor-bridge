@@ -100,6 +100,21 @@ const Explore = () => {
     return post.interestedTutors.includes(user?._id);
   };
 
+  // Get status badge component
+  const getStatusBadge = (status) => {
+    const statusClasses = {
+      open: styles.statusOpen,
+      assigned: styles.statusAssigned,
+      completed: styles.statusCompleted
+    };
+    
+    return (
+      <span className={`${styles.statusBadge} ${statusClasses[status]}`}>
+        {status.charAt(0).toUpperCase() + status.slice(1)}
+      </span>
+    );
+  };
+
   // Load posts when component mounts
   useEffect(() => {
     fetchPosts();

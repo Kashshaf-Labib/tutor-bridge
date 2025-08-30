@@ -114,6 +114,11 @@
   color: #f57c00;
 }
 
+.statusCompleted {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
 .postInfo {
   margin-bottom: 1.5rem;
 }
