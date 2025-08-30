@@ -12,7 +12,7 @@ import Home from "../src/pages/Home";
 import About from "../src/pages/About";
 import Profile from "../src/pages/Profile";
 import PostDetails from "../src/pages/PostDetails";
-// import Explore from "../src/pages/Explore";
+import Explore from "../src/pages/Explore";
 import Navbar from "../src/components/Layout/Navbar";
 import "./App.css";
 
@@ -42,7 +42,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        {/* <Route path="/explore" element={<Explore />} /> */}
+        <Route path="/explore" element={<Explore />} />
         {user && (
           <>
             <Route path="/profile" element={<Profile />} />

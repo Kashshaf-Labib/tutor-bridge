@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import styles from "./Explore.module.css";
 
@@ -178,7 +179,75 @@ const Explore = () => {
       {loading && <div className={styles.loading}>Loading posts...</div>}
       {error && <div className={styles.error}>{error}</div>}
 
-      {/* Posts will be added in next step */}
+      {/* Posts Grid */}
+      {!loading && !error && (
+        <>
+          {posts.length === 0 ? (
+            <div className={styles.noPosts}>
+              <p>No posts found matching your criteria.</p>
+            </div>
+          ) : (
+            <div className={styles.postsGrid}>
+              {posts.map((post) => (
+                <div key={post._id} className={styles.postCard}>
+                  <div className={styles.postHeader}>
+                    <h3>{post.subject}</h3>
+                    {getStatusBadge(post.status)}
+                  </div>
+                  
+                  <div className={styles.postInfo}>
+                    <p><strong>Location:</strong> {post.location}</p>
+                    <p><strong>Salary:</strong> ৳{post.salary.toLocaleString()}</p>
+                    <p><strong>Posted by:</strong> {post.student.name}</p>
+                    {post.requirements && (
+                      <p><strong>Requirements:</strong> {post.requirements.substring(0, 100)}...</p>
+                    )}
+                    <p><strong>Interested Tutors:</strong> {post.interestedTutors.length}</p>
+                  </div>
+
+                  <div className={styles.postActions}>
+                    {/* View Details Button - Available for both Students and Tutors */}
+                    <Link 
+                      to={`/post-details/${post._id}`} 
+                      className={styles.detailsBtn}
+                    >
+                      View Details
+                    </Link>
+
+                    {/* Conditional Actions based on User Role */}
+                    {user?.role === "Tutor" && post.status === "open" && (
+                      <>
+                        {hasExpressedInterest(post) ? (
+                          <button 
+                            className={`${styles.interestBtn} ${styles.alreadyInterested}`}
+                            disabled
+                          >
+                            ✓ Interest Expressed
+                          </button>
+                        ) : (
+                          <button 
+                            onClick={() => expressInterest(post._id)}
+                            className={styles.interestBtn}
+                          >
+                            Express Interest
+                          </button>
+                        )}
+                      </>
+                    )}
+
+                    {/* Show different message for Students */}
+                    {user?.role === "Student" && post.student._id !== user._id && (
+                      <span className={styles.studentInfo}>
+                        Not your post
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };
