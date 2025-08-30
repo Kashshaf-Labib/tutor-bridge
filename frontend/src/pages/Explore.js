@@ -107,8 +107,64 @@ const Explore = () => {
   
   return (
     <div className={styles.container}>
-      <h1>Explore Posts</h1>
-      {/* Content will be added in next steps */}
+      <div className={styles.header}>
+        <h1>Explore Tutoring Posts</h1>
+        {user?.role === "Student" && (
+          <p>Browse available tutoring opportunities</p>
+        )}
+        {user?.role === "Tutor" && (
+          <p>Find students looking for tutors in your expertise</p>
+        )}
+      </div>
+
+      {/* Filter Section */}
+      <div className={styles.filters}>
+        <form onSubmit={handleFilterSubmit}>
+          <div className={styles.filterGrid}>
+            <input
+              type="text"
+              name="subject"
+              placeholder="Subject (e.g., Math, Physics)"
+              value={filters.subject}
+              onChange={handleFilterChange}
+              className={styles.filterInput}
+            />
+            <input
+              type="text"
+              name="location"
+              placeholder="Location (e.g., Dhaka, Chittagong)"
+              value={filters.location}
+              onChange={handleFilterChange}
+              className={styles.filterInput}
+            />
+            <input
+              type="number"
+              name="minSalary"
+              placeholder="Min Salary"
+              value={filters.minSalary}
+              onChange={handleFilterChange}
+              className={styles.filterInput}
+            />
+            <input
+              type="number"
+              name="maxSalary"
+              placeholder="Max Salary"
+              value={filters.maxSalary}
+              onChange={handleFilterChange}
+              className={styles.filterInput}
+            />
+          </div>
+          <button type="submit" className={styles.filterBtn}>
+            Apply Filters
+          </button>
+        </form>
+      </div>
+
+      {/* Loading and Error States */}
+      {loading && <div className={styles.loading}>Loading posts...</div>}
+      {error && <div className={styles.error}>{error}</div>}
+
+      {/* Posts will be added in next step */}
     </div>
   );
 };
