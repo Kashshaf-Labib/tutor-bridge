@@ -52,7 +52,8 @@
   background: #2980b9;
 }
 
-.loading, .error {
+.loading,
+.error {
   text-align: center;
   padding: 2rem;
   font-size: 1.1rem;
@@ -134,7 +135,8 @@
   flex-wrap: wrap;
 }
 
-.detailsBtn, .interestBtn {
+.detailsBtn,
+.interestBtn {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   text-decoration: none;
@@ -182,11 +184,11 @@
   .container {
     padding: 1rem;
   }
-  
+
   .filterGrid {
     grid-template-columns: 1fr;
   }
-  
+
   .postsGrid {
     grid-template-columns: 1fr;
   }
