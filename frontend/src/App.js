@@ -12,6 +12,8 @@ import Home from "../src/pages/Home";
 import About from "../src/pages/About";
 import Profile from "../src/pages/Profile";
 import PostDetails from "../src/pages/PostDetails";
+import CreatePost from "../src/pages/CreatePost";
+import EditPost from "../src/pages/EditPost";
 // import Explore from "../src/pages/Explore";
 import Navbar from "../src/components/Layout/Navbar";
 import "./App.css";
@@ -47,6 +49,8 @@ function AppContent() {
           <>
             <Route path="/profile" element={<Profile />} />
             <Route path="/post-details/:id" element={<PostDetails />} />
+            <Route path="/create-post" element={<CreatePost />} />
+            <Route path="/edit-post/:id" element={<EditPost />} />
           </>
         )}
         {!user && (

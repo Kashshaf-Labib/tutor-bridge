@@ -1,0 +1,72 @@
+.createPostContainer {
+  max-width: 480px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  padding: 32px 24px;
+}
+
+.createPostForm {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #2575fc;
+}
+
+.required {
+  color: #e74c3c;
+  margin-left: 2px;
+}
+
+input, textarea {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #dbeafe;
+  font-size: 1rem;
+  background: #f6f7fb;
+  transition: border 0.2s;
+}
+
+.inputError {
+  border-color: #e74c3c;
+}
+
+.error {
+  color: #e74c3c;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+.apiError {
+  color: #e74c3c;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.submitBtn {
+  background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 0;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submitBtn:disabled {
+  background: #b2bec3;
+  cursor: not-allowed;
+}

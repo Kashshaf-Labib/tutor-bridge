@@ -1,59 +1,101 @@
 import React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 
+const testimonials = [
+  {
+    name: "Kashshaf Labib",
+    text: "TutorBridge helped me ace my exams! My tutor was patient and knowledgeable.",
+  },
+  {
+    name: "Mir Sayad",
+    text: "The platform is easy to use and I found the perfect math tutor in minutes.",
+  },
+  {
+    name: "Navid Kamal",
+    text: "I love the flexibility and the quality of tutors available here.",
+  },
+];
+
 const Home = () => {
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  const nextTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setCurrentTestimonial((prev) =>
+      prev === 0 ? testimonials.length - 1 : prev - 1
+    );
+  };
+
   return (
-    <div className="home-container">
-      <section className="hero-section">
-        <div className="hero-content">
-          <h1>Find Your Perfect Tutor</h1>
-          <p>Connect with qualified tutors for personalized learning experiences</p>
-          <div className="cta-buttons">
-            <Link to="/explore" className="cta-primary">Find a Tutor</Link>
-            <Link to="/register" className="cta-secondary">Become a Tutor</Link>
+    <div className="home-new-container">
+      <header className="home-hero">
+        <div className="home-hero-content">
+          
+          <div>
+            <h1>Unlock Your Potential</h1>
+            <p>
+              Discover expert tutors, personalized guidance, and a supportive
+              learning community.
+            </p>
+            <Link to="/explore" className="home-cta-btn">
+              Get Started
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      <section className="home-values">
+        <h2>How TutorBridge Helps You Succeed</h2>
+        <div className="home-values-grid">
+          <div className="home-value-card">
+            <span className="home-value-icon">🌟</span>
+            <h3>Personalized Matches</h3>
+            <p>
+              We connect you with tutors who fit your goals, schedule, and
+              learning style.
+            </p>
+          </div>
+          <div className="home-value-card">
+            <span className="home-value-icon">🛡️</span>
+            <h3>Trusted & Verified</h3>
+            <p>
+              All tutors are vetted for expertise and professionalism, so you
+              can learn with confidence.
+            </p>
+          </div>
+          <div className="home-value-card">
+            <span className="home-value-icon">⚡</span>
+            <h3>Fast & Flexible</h3>
+            <p>
+              Book sessions instantly and learn at your own pace, wherever you
+              are.
+            </p>
           </div>
         </div>
       </section>
 
-      <section className="features-section">
-        <h2>Why Choose TutorBridge?</h2>
-        <div className="features-grid">
-          <div className="feature-card">
-            <div className="feature-icon">👨‍🏫</div>
-            <h3>Expert Tutors</h3>
-            <p>Connect with verified, experienced tutors across various subjects</p>
+      <section className="home-testimonials">
+        <h2>What Our Learners Say</h2>
+        <div className="home-testimonial-card">
+          <button className="home-testimonial-nav" onClick={prevTestimonial}>
+            ‹
+          </button>
+          <div>
+            <p className="home-testimonial-text">
+              "{testimonials[currentTestimonial].text}"
+            </p>
+            <span className="home-testimonial-name">
+              — {testimonials[currentTestimonial].name}
+            </span>
           </div>
-          <div className="feature-card">
-            <div className="feature-icon">🎯</div>
-            <h3>Perfect Match</h3>
-            <p>Find tutors that match your learning style and requirements</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">💰</div>
-            <h3>Affordable Pricing</h3>
-            <p>Competitive rates with transparent pricing structure</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">🔒</div>
-            <h3>Safe & Secure</h3>
-            <p>Verified profiles and secure payment systems</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="stats-section">
-        <div className="stat-card">
-          <h3>1000+</h3>
-          <p>Active Tutors</p>
-        </div>
-        <div className="stat-card">
-          <h3>5000+</h3>
-          <p>Happy Students</p>
-        </div>
-        <div className="stat-card">
-          <h3>15+</h3>
-          <p>Subjects</p>
+          <button className="home-testimonial-nav" onClick={nextTestimonial}>
+            ›
+          </button>
         </div>
       </section>
     </div>
@@ -61,4 +103,3 @@ const Home = () => {
 };
 
 export default Home;
-
