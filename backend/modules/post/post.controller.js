@@ -65,7 +65,9 @@ export const getAllPosts = async (req, res) => {
     const { subject, location, minSalary, maxSalary } = req.query;
 
     // Build filter object
-    const filter = {};
+    const filter = {
+      status: "open"
+    };
     
     if (subject) {
       filter.subject = { $regex: subject.toString().trim(), $options: 'i' };
