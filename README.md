@@ -62,7 +62,7 @@ Tutor Bridge is a full-stack web application designed to connect tutors and stud
 
 4. Set up environment variables for the backend in a `.env` file:
    ```env
-   PORT=5000
+   PORT=3000
    MONGO_URI=your_mongodb_connection_string
    JWT_SECRET=your_jwt_secret
    ```
@@ -74,9 +74,6 @@ Tutor Bridge is a full-stack web application designed to connect tutors and stud
    cd ../frontend
    npm start
    ```
-
-### Contributing
-Contributions are welcome! Please fork the repository and submit a pull request.
 
 ### License
 This project is licensed under the MIT License.
