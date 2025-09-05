@@ -17,6 +17,10 @@ app.use("/api/auth", authRoutes);
 import postRoutes from "./modules/post/post.routes.js";
 app.use("/api/posts", postRoutes);
 
+//user routes
+import userRoutes from "./modules/user/user.routes.js";
+app.use("/api/users", userRoutes);
+
 // Sample route
 app.get("/", (req, res) => {
   res.send("API is running.....");
