@@ -75,8 +75,48 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
   };
 
+  const updatePhone = async (phone) => {
+    const res = await fetch("/api/users/update-phone", {
+      method: "PUT",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user.token}`
+      },
+      body: JSON.stringify({ phone }),
+    });
+
+    const data = await res.json();
+    if (res.ok && data.success) {
+      const updatedUser = { ...user, phone: data.data.phone };
+      setUser(updatedUser);
+      // Update user data in localStorage
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      return data;
+    } else {
+      throw new Error(data.message);
+    }
+  };
+
+  const updatePassword = async (currentPassword, newPassword) => {
+    const res = await fetch("/api/users/update-password", {
+      method: "PUT",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${user.token}`
+      },
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+
+    const data = await res.json();
+    if (res.ok && data.success) {
+      return data;
+    } else {
+      throw new Error(data.message);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, register, logout, updatePhone, updatePassword, loading }}>
       {children}
     </AuthContext.Provider>
   );

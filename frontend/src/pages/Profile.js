@@ -2,12 +2,22 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import styles from "./Profile.module.css";
+import settingsStyles from "./ProfileSettings.module.css";
 
 const Profile = () => {
-  const { user } = useContext(AuthContext);
+  const { user, updatePhone, updatePassword } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  
+  // Profile settings state
+  const [showSettings, setShowSettings] = useState(false);
+  const [activeTab, setActiveTab] = useState("phone");
+  const [phone, setPhone] = useState(user?.phone || "");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [updateMessage, setUpdateMessage] = useState({ type: "", text: "" });
 
   const fetchStudentPosts = useCallback(async () => {
     try {
@@ -87,6 +97,54 @@ const Profile = () => {
     }
   };
 
+  // Handle phone update
+  const handlePhoneUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      setUpdateMessage({ type: "", text: "" });
+      await updatePhone(phone);
+      setUpdateMessage({ 
+        type: "success", 
+        text: "Phone number updated successfully!" 
+      });
+    } catch (err) {
+      setUpdateMessage({ 
+        type: "error", 
+        text: err.message || "Failed to update phone number. Please try again." 
+      });
+    }
+  };
+
+  // Handle password update
+  const handlePasswordUpdate = async (e) => {
+    e.preventDefault();
+    
+    if (newPassword !== confirmPassword) {
+      return setUpdateMessage({ 
+        type: "error", 
+        text: "New passwords do not match!" 
+      });
+    }
+
+    try {
+      setUpdateMessage({ type: "", text: "" });
+      await updatePassword(currentPassword, newPassword);
+      // Clear password fields after successful update
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setUpdateMessage({ 
+        type: "success", 
+        text: "Password updated successfully!" 
+      });
+    } catch (err) {
+      setUpdateMessage({ 
+        type: "error", 
+        text: err.message || "Failed to update password. Please try again." 
+      });
+    }
+  };
+
   if (loading) return <div className={styles.loading}>Loading...</div>;
 
   // Student Profile
@@ -100,8 +158,111 @@ const Profile = () => {
             <p><strong>Email:</strong> {user?.email}</p>
             <p><strong>Phone:</strong> {user?.phone}</p>
             <p><strong>Role:</strong> {user?.role}</p>
+            <button 
+              className={styles.editProfileBtn}
+              onClick={() => setShowSettings(!showSettings)}
+            >
+              {showSettings ? "Hide Settings" : "Edit Profile"}
+            </button>
           </div>
         </div>
+
+        {showSettings && (
+          <div className={settingsStyles.profileSettings}>
+            <div className={settingsStyles.settingsHeader}>
+              <h2>Profile Settings</h2>
+            </div>
+            
+            <div className={settingsStyles.settingsTabs}>
+              <div 
+                className={`${settingsStyles.tab} ${activeTab === "phone" ? settingsStyles.activeTab : ""}`}
+                onClick={() => setActiveTab("phone")}
+              >
+                Update Phone
+              </div>
+              <div 
+                className={`${settingsStyles.tab} ${activeTab === "password" ? settingsStyles.activeTab : ""}`}
+                onClick={() => setActiveTab("password")}
+              >
+                Change Password
+              </div>
+            </div>
+
+            {updateMessage.text && (
+              <div className={updateMessage.type === "success" ? settingsStyles.successMessage : settingsStyles.errorMessage}>
+                {updateMessage.text}
+              </div>
+            )}
+
+            {activeTab === "phone" && (
+              <form onSubmit={handlePhoneUpdate}>
+                <div className={settingsStyles.formGroup}>
+                  <label htmlFor="phone">Phone Number</label>
+                  <input
+                    type="text"
+                    id="phone"
+                    className={settingsStyles.inputField}
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Example: +8801712345678 or 01712345678"
+                  />
+                </div>
+                <button 
+                  type="submit" 
+                  className={settingsStyles.updateBtn}
+                  disabled={!phone || phone === user?.phone}
+                >
+                  Update Phone
+                </button>
+              </form>
+            )}
+
+            {activeTab === "password" && (
+              <form onSubmit={handlePasswordUpdate}>
+                <div className={settingsStyles.formGroup}>
+                  <label htmlFor="currentPassword">Current Password</label>
+                  <input
+                    type="password"
+                    id="currentPassword"
+                    className={settingsStyles.inputField}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className={settingsStyles.formGroup}>
+                  <label htmlFor="newPassword">New Password</label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    className={settingsStyles.inputField}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className={settingsStyles.formGroup}>
+                  <label htmlFor="confirmPassword">Confirm New Password</label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    className={settingsStyles.inputField}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <button 
+                  type="submit" 
+                  className={settingsStyles.updateBtn}
+                  disabled={!currentPassword || !newPassword || newPassword !== confirmPassword}
+                >
+                  Change Password
+                </button>
+              </form>
+            )}
+          </div>
+        )}
 
         <div className={styles.postsSection}>
           <div className={styles.sectionHeader}>
@@ -174,8 +335,111 @@ const Profile = () => {
             <p><strong>Email:</strong> {user?.email}</p>
             <p><strong>Phone:</strong> {user?.phone}</p>
             <p><strong>Role:</strong> {user?.role}</p>
+            <button 
+              className={styles.editProfileBtn}
+              onClick={() => setShowSettings(!showSettings)}
+            >
+              {showSettings ? "Hide Settings" : "Edit Profile"}
+            </button>
           </div>
         </div>
+
+        {showSettings && (
+          <div className={settingsStyles.profileSettings}>
+            <div className={settingsStyles.settingsHeader}>
+              <h2>Profile Settings</h2>
+            </div>
+            
+            <div className={settingsStyles.settingsTabs}>
+              <div 
+                className={`${settingsStyles.tab} ${activeTab === "phone" ? settingsStyles.activeTab : ""}`}
+                onClick={() => setActiveTab("phone")}
+              >
+                Update Phone
+              </div>
+              <div 
+                className={`${settingsStyles.tab} ${activeTab === "password" ? settingsStyles.activeTab : ""}`}
+                onClick={() => setActiveTab("password")}
+              >
+                Change Password
+              </div>
+            </div>
+
+            {updateMessage.text && (
+              <div className={updateMessage.type === "success" ? settingsStyles.successMessage : settingsStyles.errorMessage}>
+                {updateMessage.text}
+              </div>
+            )}
+
+            {activeTab === "phone" && (
+              <form onSubmit={handlePhoneUpdate}>
+                <div className={settingsStyles.formGroup}>
+                  <label htmlFor="phone">Phone Number</label>
+                  <input
+                    type="text"
+                    id="phone"
+                    className={settingsStyles.inputField}
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Example: +8801712345678 or 01712345678"
+                  />
+                </div>
+                <button 
+                  type="submit" 
+                  className={settingsStyles.updateBtn}
+                  disabled={!phone || phone === user?.phone}
+                >
+                  Update Phone
+                </button>
+              </form>
+            )}
+
+            {activeTab === "password" && (
+              <form onSubmit={handlePasswordUpdate}>
+                <div className={settingsStyles.formGroup}>
+                  <label htmlFor="currentPassword">Current Password</label>
+                  <input
+                    type="password"
+                    id="currentPassword"
+                    className={settingsStyles.inputField}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className={settingsStyles.formGroup}>
+                  <label htmlFor="newPassword">New Password</label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    className={settingsStyles.inputField}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className={settingsStyles.formGroup}>
+                  <label htmlFor="confirmPassword">Confirm New Password</label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    className={settingsStyles.inputField}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <button 
+                  type="submit" 
+                  className={settingsStyles.updateBtn}
+                  disabled={!currentPassword || !newPassword || newPassword !== confirmPassword}
+                >
+                  Change Password
+                </button>
+              </form>
+            )}
+          </div>
+        )}
 
         <div className={styles.postsSection}>
           <div className={styles.sectionHeader}>
